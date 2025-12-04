@@ -1,5 +1,4 @@
 import type { user, player } from '@/lib/db/migrations/schema';
-
 export type DatabasePlayer = typeof player.$inferSelect;
 import type { InferSelectModel } from 'drizzle-orm';
 
