@@ -1,5 +1,6 @@
-import type { user } from '@/lib/db/migrations/schema';
-import { DatabasePlayer } from '@/lib/db/schema/tournaments';
+import type { user, player } from '@/lib/db/migrations/schema';
+
+export type DatabasePlayer = typeof player.$inferSelect;
 import type { InferSelectModel } from 'drizzle-orm';
 
 /**
@@ -50,13 +51,15 @@ export interface TournamentModel {
   possiblePlayers: Array<DatabasePlayer>; // players of organizer club except already added
 }
 
-type Result = '0-1' | '1-0' | '1/2-1/2';
+export type Result = '0-1' | '1-0' | '1/2-1/2';
 
-type Format = 'swiss' | 'round robin' | 'double elimination';
+export type Format = 'swiss' | 'round robin' | 'double elimination';
 
-type TournamentType = 'solo' | 'doubles' | 'team';
+export type TournamentType = 'solo' | 'doubles' | 'team';
 
-type TournamentStatus = 'not started' | 'ongoing' | 'finished';
+export type TournamentStatus = 'not started' | 'ongoing' | 'finished';
+
+export type Status = 'organizer' | 'player' | 'viewer';
 
 type RoundName =
   | 'final'

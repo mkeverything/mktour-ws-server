@@ -44,11 +44,13 @@ describe('WebSocket Server Integration - Core Functionality', () => {
       tournamentId: 'tournament123',
       status: 'viewer',
       userId: null,
+      ip: '127.0.0.1',
     };
 
     expect(guestData.connectionType).toBe('tournament');
     expect(guestData.username).toBeNull();
     expect(guestData.status).toBe('viewer');
+    expect(guestData.ip).toBe('127.0.0.1');
   });
 
   test('should handle global connection data correctly', () => {
@@ -244,11 +246,13 @@ describe('WebSocket Server - Status and Roles', () => {
       tournamentId: 'tour1',
       status: 'viewer',
       userId: null,
+      ip: '192.168.1.1',
     };
 
     expect(guestData.status).toBe('viewer');
     expect(guestData.username).toBeNull();
     expect(guestData.userId).toBeNull();
+    expect(guestData.ip).toBe('192.168.1.1');
   });
 
   test('should validate organizer permissions', () => {

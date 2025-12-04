@@ -1,4 +1,4 @@
-import { PlayerModel, Result } from '@/types/tournaments';
+import { PlayerModel, Result, GameModel, Status } from '@/types/tournaments';
 
 type DashboardMessage =
   | { type: 'add-existing-player'; body: PlayerModel }
@@ -61,6 +61,7 @@ type WebSocketData =
       connectionType: 'global';
       username: string;
       userId: string;
+      status?: Status;
     };
 
 type Message = DashboardMessage | GlobalMessage;
