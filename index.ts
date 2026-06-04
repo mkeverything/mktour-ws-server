@@ -102,6 +102,10 @@ const server = Bun.serve<WebSocketData>({
       if (typeof message !== 'string') {
         return;
       }
+      if (message === '') {
+        ws.send('');
+        return;
+      }
 
       try {
         const data = JSON.parse(message) as Message;
