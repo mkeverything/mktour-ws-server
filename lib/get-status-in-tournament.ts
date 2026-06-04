@@ -33,7 +33,7 @@ export const getStatusInTournament = async (
       })
       .from(playersToUnits)
       .innerJoin(tournamentUnits, eq(playersToUnits.unitId, tournamentUnits.id))
-      .where(and(eq(playersToUnits.playerId, player.id), eq(tournamentUnits.tournamentId, tournamentId)))
+      .where(and(eq(playersToUnits.playerId, playerDb.id), eq(tournamentUnits.tournamentId, tournamentId)))
   ).at(0);
 
   if (isHere) {
