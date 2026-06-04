@@ -7,35 +7,50 @@ import type { InferSelectModel } from 'drizzle-orm';
  */
 export interface PlayerModel {
   id: string;
-  nickname: string; // players.nickname
+  nickname: string;
   realname?: string | null;
   rating: number | null;
+  userId?: string | null;
+  username?: string | null;
+}
+
+export interface UnitModel {
+  id: string;
+  size: number;
   wins: number;
   draws: number;
   losses: number;
-  color_index: number;
-  exited: boolean | null;
+  colorIndex: number;
   place: number | null;
+  isOut: boolean | null;
+  number: number | null;
+  addedAt: Date | null;
+  unitNickname: string;
+  players: PlayerModel[];
 }
 
 export interface GameModel {
-  id: string; // games.id
-  black_id: string; // games.black_id;
-  white_id: string; // games.white_id;
-  black_nickname: string; // players where id === games.black_id  nickname;
-  white_nickname: string; // players where id === games.white_id  nickname;
-  black_prev_game_id: string | null; // links to other games necessary for elimination-brackets
-  white_prev_game_id: string | null; // links to other games necessary for elimination-brackets
-  round_number: number; // games.round_number
-  round_name: RoundName | null; // games.round_name
-  game_number: number;
-  result: Result | null; //games.result
+  id: string;
+  gameNumber: number;
+  roundNumber: number;
+  roundName: RoundName | null;
+  whiteUnitId: string;
+  blackUnitId: string;
+  whitePlayerId: string | null;
+  blackPlayerId: string | null;
+  whitePrevGameId: string | null;
+  blackPrevGameId: string | null;
+  whiteNickname: string;
+  blackNickname: string;
+  result: Result | null;
+  finishedAt: Date | null;
+  tournamentId: string;
 }
 
 export interface TournamentModel {
   id: string; //tournaments.id
   date: string; // tournaments.date
-  title: string; // tournaments.title
+  title: string | null; // tournaments.title
   type: TournamentType | undefined; // tournaments.type
   format: Format | undefined; // tournaments.format
   organizer: {
@@ -52,7 +67,7 @@ export interface TournamentModel {
 
 export type Result = '0-1' | '1-0' | '1/2-1/2';
 
-export type Format = 'swiss' | 'round robin' | 'double elimination';
+export type Format = 'swiss' | 'round-robin' | 'single-elimination';
 
 export type TournamentType = 'solo' | 'doubles' | 'team';
 
@@ -72,3 +87,4 @@ type RoundName =
   | '1/128';
 
 export type DatabaseUser = InferSelectModel<typeof user>;
+export type DatabaseUserAttributes = Omit<DatabaseUser, 'id'> & { selected_club?: string | null };

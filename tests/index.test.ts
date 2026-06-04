@@ -58,6 +58,7 @@ describe('WebSocket Server Integration - Core Functionality', () => {
       connectionType: 'global',
       username: 'testuser',
       userId: 'user123',
+      clubId: 'club123',
     };
 
     expect(globalData.connectionType).toBe('global');
@@ -68,65 +69,67 @@ describe('WebSocket Server Integration - Core Functionality', () => {
 describe('WebSocket Server - Message Validation', () => {
   test('should validate dashboard message structure', () => {
     const resetMessage: DashboardMessage = {
-      type: 'reset-tournament',
+      event: 'reset-tournament',
     };
 
-    expect(resetMessage.type).toBe('reset-tournament');
-    expect(JSON.stringify(resetMessage)).toBe('{"type":"reset-tournament"}');
+    expect(resetMessage.event).toBe('reset-tournament');
+    expect(JSON.stringify(resetMessage)).toBe('{"event":"reset-tournament"}');
   });
 
   test('should validate game result message structure', () => {
     const gameResultMessage: DashboardMessage = {
-      type: 'set-game-result',
+      event: 'set-game-result',
       gameId: 'game123',
       result: '1-0',
       roundNumber: 1,
     };
 
-    expect(gameResultMessage.type).toBe('set-game-result');
+    expect(gameResultMessage.event).toBe('set-game-result');
     expect(gameResultMessage.gameId).toBe('game123');
     expect(gameResultMessage.result).toBe('1-0');
   });
 
   test('should validate tournament start message structure', () => {
     const startMessage: DashboardMessage = {
-      type: 'start-tournament',
-      started_at: new Date('2024-01-01'),
-      rounds_number: 5,
+      event: 'start-tournament',
+      startedAt: new Date('2024-01-01'),
+      games: [],
     };
 
-    expect(startMessage.type).toBe('start-tournament');
-    expect(startMessage.rounds_number).toBe(5);
+    expect(startMessage.event).toBe('start-tournament');
+    expect(startMessage.games).toEqual([]);
   });
 
   test('should validate error message structure', () => {
     const errorMsg: DashboardMessage = {
-      type: 'error',
+      event: 'error',
       message: 'Test error message',
     };
 
-    expect(errorMsg.type).toBe('error');
+    expect(errorMsg.event).toBe('error');
     expect(errorMsg.message).toBe('Test error message');
   });
 
   test('should validate global notification message', () => {
     const notification: GlobalMessage = {
-      type: 'user_notification',
+      type: 'user',
+      event: 'tournament_won',
       recipientId: 'user123',
     };
 
-    expect(notification.type).toBe('user_notification');
+    expect(notification.type).toBe('user');
     expect(notification.recipientId).toBe('user123');
   });
 
   test('should validate club removal message', () => {
     const removal: GlobalMessage = {
-      type: 'removed_from_club',
+      type: 'user',
+      event: 'removed_from_club_managers',
       clubId: 'club123',
       recipientId: 'user456',
     };
 
-    expect(removal.type).toBe('removed_from_club');
+    expect(removal.type).toBe('user');
     expect(removal.clubId).toBe('club123');
     expect(removal.recipientId).toBe('user456');
   });
@@ -135,26 +138,26 @@ describe('WebSocket Server - Message Validation', () => {
 describe('WebSocket Server - Message Serialization', () => {
   test('should serialize and deserialize dashboard messages', () => {
     const message: DashboardMessage = {
-      type: 'delete-tournament',
+      event: 'delete-tournament',
     };
 
     const serialized = JSON.stringify(message);
     const deserialized = JSON.parse(serialized) as DashboardMessage;
 
-    expect(deserialized.type).toBe('delete-tournament');
+    expect(deserialized.event).toBe('delete-tournament');
   });
 
   test('should serialize and deserialize complex messages', () => {
     const message: DashboardMessage = {
-      type: 'finish-tournament',
-      closed_at: new Date('2024-01-01T12:00:00Z'),
+      event: 'finish-tournament',
+      closedAt: new Date('2024-01-01T12:00:00Z'),
     };
 
     const serialized = JSON.stringify(message);
     const deserialized = JSON.parse(serialized);
 
-    expect(deserialized.type).toBe('finish-tournament');
-    expect(deserialized.closed_at).toBeDefined();
+    expect(deserialized.event).toBe('finish-tournament');
+    expect(deserialized.closedAt).toBeDefined();
   });
 
   test('should handle message parsing errors gracefully', () => {
@@ -165,14 +168,14 @@ describe('WebSocket Server - Message Serialization', () => {
 
   test('should validate message type discrimination', () => {
     const messages: DashboardMessage[] = [
-      { type: 'reset-tournament' },
-      { type: 'delete-tournament' },
-      { type: 'error', message: 'test' },
+      { event: 'reset-tournament' },
+      { event: 'delete-tournament' },
+      { event: 'error', message: 'test' },
     ];
 
     messages.forEach((msg) => {
-      expect(msg.type).toBeDefined();
-      expect(typeof msg.type).toBe('string');
+      expect(msg.event).toBeDefined();
+      expect(typeof msg.event).toBe('string');
     });
   });
 });
@@ -215,6 +218,7 @@ describe('WebSocket Server - Protocol and Authentication', () => {
       connectionType: 'global',
       username: 'user2',
       userId: 'uid2',
+      clubId: 'club2',
     };
 
     expect(tournamentConnection.connectionType).toBe('tournament');
@@ -339,11 +343,11 @@ describe('WebSocket Server - Error Handling', () => {
 
   test('should validate error message structure', () => {
     const errorMsg: DashboardMessage = {
-      type: 'error',
+      event: 'error',
       message: 'Unauthorized action',
     };
 
-    expect(errorMsg.type).toBe('error');
+    expect(errorMsg.event).toBe('error');
     expect(errorMsg.message).toBeDefined();
     expect(typeof errorMsg.message).toBe('string');
   });
@@ -373,7 +377,7 @@ describe('WebSocket Server - Message Broadcasting', () => {
 
   test('should serialize messages for broadcasting', () => {
     const message: DashboardMessage = {
-      type: 'reset-tournament',
+      event: 'reset-tournament',
     };
 
     const serialized = JSON.stringify(message);
@@ -383,7 +387,8 @@ describe('WebSocket Server - Message Broadcasting', () => {
 
   test('should handle complex message broadcasting', () => {
     const message: GlobalMessage = {
-      type: 'removed_from_club',
+      type: 'user',
+      event: 'removed_from_club_managers',
       clubId: 'club123',
       recipientId: 'user456',
     };
@@ -391,8 +396,8 @@ describe('WebSocket Server - Message Broadcasting', () => {
     const serialized = JSON.stringify(message);
     const deserialized = JSON.parse(serialized) as GlobalMessage;
 
-    expect(deserialized.type).toBe('removed_from_club');
-    if (deserialized.type === 'removed_from_club') {
+    expect(deserialized.type).toBe('user');
+    if (deserialized.type === 'user') {
       expect(deserialized.clubId).toBe('club123');
       expect(deserialized.recipientId).toBe('user456');
     }

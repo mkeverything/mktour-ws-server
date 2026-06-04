@@ -77,6 +77,7 @@ const server = Bun.serve<WebSocketData>({
           connectionType: 'global',
           username: user.username,
           userId: user.id,
+          clubId: user.selected_club ?? null,
         },
       });
       return;
@@ -94,6 +95,7 @@ const server = Bun.serve<WebSocketData>({
       } else {
         console.log(`${ws.data.username} connected to global channel`);
         ws.subscribe(`user:${ws.data.userId}`);
+        if (ws.data.clubId) ws.subscribe(`club:${ws.data.clubId}`);
       }
     },
     message(ws, message) {
@@ -120,6 +122,7 @@ const server = Bun.serve<WebSocketData>({
       } else {
         console.log(`${ws.data.username} disconnected from global channel`);
         ws.unsubscribe(`user:${ws.data.userId}`);
+        if (ws.data.clubId) ws.unsubscribe(`club:${ws.data.clubId}`);
       }
     },
   },
@@ -128,7 +131,11 @@ const server = Bun.serve<WebSocketData>({
 function handleTournamentMessage(ws: Bun.ServerWebSocket<WebSocketData>, message: DashboardMessage) {
   if (ws.data.connectionType !== 'tournament' || !ws.data.tournamentId) return;
 
-  if (ws.data.status === 'organizer') {
+  const canPublish =
+    ws.data.status === 'organizer' ||
+    (ws.data.status === 'player' && (message.event === 'set-game-result' || message.event === 'withdraw-unit'));
+
+  if (canPublish) {
     console.log(`tournament ${ws.data.tournamentId}, ${ws.data.username}: ${JSON.stringify(message)}`);
     ws.publish(`tournament:${ws.data.tournamentId}`, JSON.stringify(message));
   } else {
@@ -140,6 +147,11 @@ function handleGlobalMessage(ws: Bun.ServerWebSocket<WebSocketData>, message: Gl
   if (ws.data.connectionType !== 'global') return;
 
   console.log(`global, ${ws.data.username}: ${JSON.stringify(message)}`);
+  if (message.type === 'club') {
+    ws.publish(`club:${message.recipientClubId}`, JSON.stringify(message));
+    return;
+  }
+
   ws.publish(`user:${message.recipientId}`, JSON.stringify(message));
 }
 
