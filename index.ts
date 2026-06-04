@@ -3,10 +3,10 @@ import { validateRequest } from '@/lib/lucia';
 import { TLS } from './lib/config/tls';
 import { decrypt } from './lib/crypto';
 import { getStatusInTournament } from './lib/get-status-in-tournament';
+import { getClientIp } from './lib/utils';
 import { errorMessage } from './lib/ws-error-message';
 
 import type { DashboardMessage, GlobalMessage, Message, WebSocketData } from './types/ws-events';
-import { getClientIp } from './lib/utils';
 
 const server = Bun.serve<WebSocketData>({
   port: process.env.PORT || 7070,
@@ -50,14 +50,14 @@ const server = Bun.serve<WebSocketData>({
         return new Response('unauthorized', { status: 401 });
       }
 
-      const status = await getStatusInTournament(user, tournamentId);
+      const tournamentAuth = await getStatusInTournament(user.id, tournamentId);
 
       server.upgrade(req, {
         data: {
           connectionType: 'tournament',
           username: user.username,
           tournamentId,
-          status,
+          status: tournamentAuth.status,
           userId: user.id,
         },
       });
@@ -97,7 +97,7 @@ const server = Bun.serve<WebSocketData>({
       }
     },
     message(ws, message) {
-      if (!message || message instanceof Buffer) {
+      if (typeof message !== 'string') {
         return;
       }
 
