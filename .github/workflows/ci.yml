@@ -1,4 +1,4 @@
-name: CI
+name: ci
 
 on:
   push:
@@ -19,7 +19,7 @@ env:
 
 jobs:
   check:
-    name: Type check & test
+    name: type check & test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -35,7 +35,7 @@ jobs:
       - run: bun test
 
   image:
-    name: Build, smoke test & push image
+    name: build, smoke test & push image
     needs: check
     runs-on: ubuntu-latest
     permissions:
@@ -54,7 +54,7 @@ jobs:
           load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      - name: Container becomes healthy
+      - name: container becomes healthy
         run: |
           docker run --detach --name ws -e OPENSTATUS_HEADER=ci-health -e DATABASE_URL=file:/tmp/ci.sqlite "$IMAGE:sha-$GITHUB_SHA"
           for _ in $(seq 30); do
@@ -77,7 +77,7 @@ jobs:
         run: docker push "$IMAGE:sha-$GITHUB_SHA"
 
   deploy:
-    name: Deploy beta & prod
+    name: deploy beta & prod
     needs: image
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
@@ -86,7 +86,7 @@ jobs:
       group: deploy
       cancel-in-progress: false
     steps:
-      - name: Roll out on the server
+      - name: roll out on the server
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_PORT: ${{ secrets.SSH_PORT }}
