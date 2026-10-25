@@ -159,7 +159,7 @@ function handleGlobalMessage(ws: Bun.ServerWebSocket<WebSocketData>, message: Gl
   ws.publish(`user:${message.recipientId}`, JSON.stringify(message));
 }
 
-console.log(`Listening on ${server.hostname}:${server.port}`);
+console.log(`listening on ${server.hostname}:${server.port}`);
 console.log('supported endpoints:');
 console.log('  - /tournament/{tournamentId} - for tournament connections');
 console.log('  - /global - for global user-connections');

@@ -9,8 +9,9 @@ export const getStatusInTournament = async (
 ): Promise<TournamentAuthStatusModel> => {
   if (!userId) return { status: 'viewer', unitId: null };
 
-  const tournamentDb =
-    (await db.select({ clubId: tournament.clubId }).from(tournament).where(eq(tournament.id, tournamentId))).at(0);
+  const tournamentDb = (
+    await db.select({ clubId: tournament.clubId }).from(tournament).where(eq(tournament.id, tournamentId))
+  ).at(0);
   const clubId = tournamentDb?.clubId;
   if (!clubId) throw new Error('TOURNAMENT_NOT_FOUND');
 
@@ -22,7 +23,12 @@ export const getStatusInTournament = async (
   ).at(0)?.status;
   if (dbStatus) return { status: 'organizer', unitId: null };
 
-  const playerDb = (await db.select().from(player).where(and(eq(player.userId, userId), eq(player.clubId, clubId)))).at(0);
+  const playerDb = (
+    await db
+      .select()
+      .from(player)
+      .where(and(eq(player.userId, userId), eq(player.clubId, clubId)))
+  ).at(0);
   if (!playerDb) return { status: 'viewer', unitId: null };
 
   const isHere = (
@@ -47,6 +53,4 @@ export const getStatusInTournament = async (
 };
 
 type TournamentAuthStatusModel =
-  | { status: 'organizer'; unitId: null }
-  | { status: 'player'; unitId: string }
-  | { status: 'viewer'; unitId: null };
+  { status: 'organizer'; unitId: null } | { status: 'player'; unitId: string } | { status: 'viewer'; unitId: null };

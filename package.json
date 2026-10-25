@@ -4,9 +4,9 @@
   "type": "module",
   "devDependencies": {
     "@types/bun": "^1.3.14",
-    "drizzle-kit": "1.0.0-rc.4"
-  },
-  "peerDependencies": {
+    "drizzle-kit": "1.0.0-rc.4",
+    "husky": "^9.1.7",
+    "prettier": "^3.9.6",
     "typescript": "^7.0.2"
   },
   "scripts": {
@@ -15,14 +15,14 @@
     "dev:local": "OFFLINE=true bun --watch index.ts",
     "format": "bunx prettier . --write",
     "typecheck": "tsc --noEmit",
-    "db:pull": "drizzle-kit pull && rm -rf lib/db/migrations/*/ && prettier --write lib/db/migrations"
+    "db:pull": "drizzle-kit pull && rm -rf lib/db/migrations/*/ && prettier --write lib/db/migrations",
+    "prepare": "husky"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",
     "dotenv": "^17.4.2",
     "drizzle-orm": "1.0.0-rc.4",
     "lucia": "^3.2.2",
-    "nanoid": "^6.0.1",
-    "prettier": "^3.9.6"
+    "nanoid": "^6.0.1"
   }
 }

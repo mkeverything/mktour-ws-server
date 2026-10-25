@@ -76,15 +76,7 @@ export type TournamentStatus = 'not started' | 'ongoing' | 'finished';
 export type Status = 'organizer' | 'player' | 'viewer';
 
 type RoundName =
-  | 'final'
-  | 'match_for_third'
-  | 'semifinal'
-  | 'quarterfinal'
-  | '1/8'
-  | '1/16'
-  | '1/32'
-  | '1/64'
-  | '1/128';
+  'final' | 'match_for_third' | 'semifinal' | 'quarterfinal' | '1/8' | '1/16' | '1/32' | '1/64' | '1/128';
 
 export type DatabaseUser = InferSelectModel<typeof user>;
 export type DatabaseUserAttributes = Omit<DatabaseUser, 'id'> & { selected_club?: string | null };

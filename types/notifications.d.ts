@@ -1,33 +1,21 @@
 import { ClubModel } from '@/server/zod/clubs';
 
-import type {
-  ClubNotificationEvent,
-  UserNotificationEvent,
-} from '@/server/zod/enums';
+import type { ClubNotificationEvent, UserNotificationEvent } from '@/server/zod/enums';
 import type {
   ClubNotificationExtendedModel,
   ClubNotificationMetadataMap,
   UserNotificationMetadataMap,
 } from '@/server/zod/notifications';
-import {
-  ClubNotificationModel,
-  UserNotificationModel,
-} from '@/server/zod/notifications';
+import { ClubNotificationModel, UserNotificationModel } from '@/server/zod/notifications';
 import { AffiliationModel, PlayerModel } from '@/server/zod/players';
 
 // typed notifications (database + typed metadata)
-type UserNotification<T extends UserNotificationEvent> = Omit<
-  UserNotificationModel,
-  'event' | 'metadata'
-> & {
+type UserNotification<T extends UserNotificationEvent> = Omit<UserNotificationModel, 'event' | 'metadata'> & {
   event: T;
   metadata: UserNotificationMetadataMap[T];
 };
 
-type ClubNotification<T extends ClubNotificationEvent> = Omit<
-  ClubNotificationModel,
-  'event' | 'metadata'
-> & {
+type ClubNotification<T extends ClubNotificationEvent> = Omit<ClubNotificationModel, 'event' | 'metadata'> & {
   event: T;
   metadata: ClubNotificationMetadataMap[T];
 };
@@ -56,7 +44,7 @@ export type AnyUserNotificationExtended = {
   [K in UserNotificationEvent]: UserNotificationExtended<K>;
 }[UserNotificationEvent];
 
-// Generic typed version that narrows event and metadata from the schema-inferred type
+// generic typed version that narrows event and metadata from the schema-inferred type
 type ClubNotificationExtendedTyped<T extends ClubNotificationEvent> = Omit<
   ClubNotificationExtendedModel,
   'event' | 'metadata'
@@ -118,7 +106,4 @@ type GlobalErrorMessage = {
 };
 
 // all possible global websocket messages
-export type GlobalMessage =
-  | AnyUserWebSocketMessage
-  | AnyClubWebSocketMessage
-  | GlobalErrorMessage;
+export type GlobalMessage = AnyUserWebSocketMessage | AnyClubWebSocketMessage | GlobalErrorMessage;
