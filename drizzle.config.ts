@@ -1,14 +1,12 @@
-import type { Config } from 'drizzle-kit';
 import { defineConfig } from 'drizzle-kit';
 import { DATABASE_AUTH_TOKEN, DATABASE_URL } from './lib/config/urls';
 
 export default defineConfig({
-  schema: './lib/db/schema',
   out: './lib/db/migrations',
   dialect: 'turso',
   dbCredentials: {
     url: DATABASE_URL,
     authToken: DATABASE_AUTH_TOKEN,
   },
-  strict: true,
-} satisfies Config);
+  tablesFilter: ['!__drizzle_migrations*', '!*_backup', '!game_new'],
+});
