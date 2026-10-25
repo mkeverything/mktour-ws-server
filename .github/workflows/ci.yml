@@ -29,6 +29,8 @@ jobs:
         with:
           bun-version: '1.4.2'
       - run: bun install --frozen-lockfile
+      # the pre-commit hook formats staged files, but it can be skipped
+      - run: bunx prettier --check .
       - run: bun run typecheck
       - run: bun test
 

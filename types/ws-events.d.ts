@@ -4,7 +4,12 @@ export type DashboardMessage =
   | { event: 'edit-doubles-unit'; unit: UnitModel }
   | { event: 'prestart-units-updated'; units: UnitModel[] }
   | { event: 'withdraw-unit'; id: UnitModel['id'] }
-  | { event: 'set-game-result'; gameId: GameModel['id']; result: GameModel['result']; roundNumber: GameModel['roundNumber'] }
+  | {
+      event: 'set-game-result';
+      gameId: GameModel['id'];
+      result: GameModel['result'];
+      roundNumber: GameModel['roundNumber'];
+    }
   | { event: 'start-tournament'; startedAt: Date; games: GameModel[] }
   | { event: 'finish-tournament'; closedAt: Date }
   | { event: 'delete-tournament' }

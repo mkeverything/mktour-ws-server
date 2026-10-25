@@ -3,10 +3,10 @@
 FROM oven/bun:1.4.2-slim AS base
 WORKDIR /usr/src/app
 
-# production dependencies only
+# production dependencies only; no scripts, since "prepare" installs git hooks with dev-only husky
 FROM base AS install
 COPY package.json bun.lockb ./
-RUN bun install --frozen-lockfile --production
+RUN bun install --frozen-lockfile --production --ignore-scripts
 
 # only what the server needs at runtime: no .git, tests, docs or dev tooling
 FROM base AS release
