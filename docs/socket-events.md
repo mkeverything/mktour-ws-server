@@ -1,5 +1,5 @@
-This is a file which depicts types of socket events related to tournament standings.
-PUB-SUB
+this is a file which depicts types of socket events related to tournament standings.
+pub-sub
 
 topics:
 

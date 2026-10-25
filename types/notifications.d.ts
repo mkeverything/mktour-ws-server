@@ -44,7 +44,7 @@ export type AnyUserNotificationExtended = {
   [K in UserNotificationEvent]: UserNotificationExtended<K>;
 }[UserNotificationEvent];
 
-// Generic typed version that narrows event and metadata from the schema-inferred type
+// generic typed version that narrows event and metadata from the schema-inferred type
 type ClubNotificationExtendedTyped<T extends ClubNotificationEvent> = Omit<
   ClubNotificationExtendedModel,
   'event' | 'metadata'

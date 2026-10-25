@@ -2,7 +2,7 @@ import { describe, expect, test, beforeAll } from 'bun:test';
 import { encrypt, decrypt } from '@/lib/crypto';
 import type { DashboardMessage, GlobalMessage, WebSocketData } from '@/types/ws-events';
 
-// Set up test environment
+// set up test environment
 beforeAll(() => {
   process.env.SECRET_KEY = process.env.SECRET_KEY || 'test-secret-key-that-is-at-least-32-characters-long';
   process.env.PORT = process.env.PORT || '7070';
@@ -10,21 +10,21 @@ beforeAll(() => {
 });
 
 /**
- * Integration tests for the WebSocket server
- * These tests verify the core functionality without mocking
+ * integration tests for the websocket server
+ * these tests verify the core functionality without mocking
  */
 
-describe('WebSocket Server Integration - Core Functionality', () => {
-  test('should encrypt and decrypt session IDs for WebSocket protocol', () => {
+describe('websocket server integration - core functionality', () => {
+  test('should encrypt and decrypt session ids for websocket protocol', () => {
     const sessionId = 'test-session-123';
     const encrypted = encrypt(sessionId);
     const decrypted = decrypt(encrypted);
 
     expect(decrypted).toBe(sessionId);
-    expect(encrypted).not.toContain(':'); // URL-safe
+    expect(encrypted).not.toContain(':'); // url-safe
   });
 
-  test('should handle WebSocket data types correctly', () => {
+  test('should handle websocket data types correctly', () => {
     const tournamentData: WebSocketData = {
       connectionType: 'tournament',
       username: 'testuser',
@@ -37,7 +37,7 @@ describe('WebSocket Server Integration - Core Functionality', () => {
     expect(tournamentData.status).toBe('organizer');
   });
 
-  test('should handle guest WebSocket data correctly', () => {
+  test('should handle guest websocket data correctly', () => {
     const guestData: WebSocketData = {
       connectionType: 'tournament',
       username: null,
@@ -66,7 +66,7 @@ describe('WebSocket Server Integration - Core Functionality', () => {
   });
 });
 
-describe('WebSocket Server - Message Validation', () => {
+describe('websocket server - message validation', () => {
   test('should validate dashboard message structure', () => {
     const resetMessage: DashboardMessage = {
       event: 'reset-tournament',
@@ -135,7 +135,7 @@ describe('WebSocket Server - Message Validation', () => {
   });
 });
 
-describe('WebSocket Server - Message Serialization', () => {
+describe('websocket server - message serialization', () => {
   test('should serialize and deserialize dashboard messages', () => {
     const message: DashboardMessage = {
       event: 'delete-tournament',
@@ -180,22 +180,22 @@ describe('WebSocket Server - Message Serialization', () => {
   });
 });
 
-describe('WebSocket Server - Protocol and Authentication', () => {
-  test('should encrypt session IDs for WebSocket subprotocol', () => {
+describe('websocket server - protocol and authentication', () => {
+  test('should encrypt session ids for websocket subprotocol', () => {
     const sessionId = 'session-abc-123';
     const encrypted = encrypt(sessionId);
 
-    // Should be URL-safe (no special characters that break WebSocket protocol)
+    // should be url-safe (no special characters that break websocket protocol)
     expect(encrypted).not.toContain(':');
     expect(encrypted).not.toContain('/');
     expect(encrypted).not.toContain('+');
     expect(encrypted).not.toContain('=');
 
-    // Should decrypt back to original
+    // should decrypt back to original
     expect(decrypt(encrypted)).toBe(sessionId);
   });
 
-  test('should handle different session ID formats', () => {
+  test('should handle different session id formats', () => {
     const sessionIds = ['simple-session', 'session_with_underscores', 'session-with-dashes', 'SessionWithCaps123'];
 
     sessionIds.forEach((sessionId) => {
@@ -226,7 +226,7 @@ describe('WebSocket Server - Protocol and Authentication', () => {
   });
 });
 
-describe('WebSocket Server - Status and Roles', () => {
+describe('websocket server - status and roles', () => {
   test('should differentiate between user statuses', () => {
     const statuses: Array<'organizer' | 'player' | 'viewer'> = ['organizer', 'player', 'viewer'];
 
@@ -268,7 +268,7 @@ describe('WebSocket Server - Status and Roles', () => {
       userId: 'admin123',
     };
 
-    // Organizer should be able to publish messages
+    // organizer should be able to publish messages
     expect(organizerData.status).toBe('organizer');
     expect(organizerData.username).not.toBeNull();
   });
@@ -282,14 +282,14 @@ describe('WebSocket Server - Status and Roles', () => {
       userId: 'player123',
     };
 
-    // Player should not have organizer privileges
+    // player should not have organizer privileges
     expect(playerData.status).toBe('player');
     expect(playerData.status).not.toBe('organizer');
   });
 });
 
-describe('WebSocket Server - Tournament ID Validation', () => {
-  test('should handle valid tournament IDs', () => {
+describe('websocket server - tournament id validation', () => {
+  test('should handle valid tournament ids', () => {
     const validIds = ['tournament-123', 'tour_abc_456', 'TOURNAMENT789', 'tour-with-many-parts-123'];
 
     validIds.forEach((id) => {
@@ -321,7 +321,7 @@ describe('WebSocket Server - Tournament ID Validation', () => {
   });
 });
 
-describe('WebSocket Server - Error Handling', () => {
+describe('websocket server - error handling', () => {
   test('should create proper error response format', () => {
     const errorResponse = {
       error: 'invalid message format',
@@ -333,7 +333,7 @@ describe('WebSocket Server - Error Handling', () => {
     expect(parsed.error).toBe('invalid message format');
   });
 
-  test('should handle malformed JSON gracefully', () => {
+  test('should handle malformed json gracefully', () => {
     const malformedInputs = ['not json at all', '{incomplete', '{"key": undefined}'];
 
     malformedInputs.forEach((input) => {
@@ -358,7 +358,7 @@ describe('WebSocket Server - Error Handling', () => {
   });
 });
 
-describe('WebSocket Server - Message Broadcasting', () => {
+describe('websocket server - message broadcasting', () => {
   test('should format tournament broadcast topic correctly', () => {
     const tournamentId = 'tournament-abc-123';
     const topic = `tournament:${tournamentId}`;

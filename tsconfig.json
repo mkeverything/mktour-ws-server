@@ -8,7 +8,7 @@
     "jsx": "react-jsx",
     "allowJs": true,
 
-    /* Bundler mode */
+    /* bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": false,
@@ -18,7 +18,7 @@
       "@/*": ["./*"]
     },
 
-    /* Linting */
+    /* linting */
     "skipLibCheck": true,
     "strict": true,
     "noFallthroughCasesInSwitch": true,

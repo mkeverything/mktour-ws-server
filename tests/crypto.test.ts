@@ -27,10 +27,10 @@ describe('crypto', () => {
     const encrypted1 = encrypt(original);
     const encrypted2 = encrypt(original);
 
-    // Different encrypted values due to random salt and IV
+    // different encrypted values due to random salt and iv
     expect(encrypted1).not.toBe(encrypted2);
 
-    // But both decrypt to the same value
+    // but both decrypt to the same value
     expect(decrypt(encrypted1)).toBe(original);
     expect(decrypt(encrypted2)).toBe(original);
   });
@@ -59,11 +59,11 @@ describe('crypto', () => {
     expect(decrypted).toBe(original);
   });
 
-  test('encrypted string should be URL-safe base64', () => {
+  test('encrypted string should be url-safe base64', () => {
     const original = 'test message';
     const encrypted = encrypt(original);
 
-    // Should not contain +, /, or = (URL-unsafe base64 characters)
+    // should not contain +, /, or = (url-unsafe base64 characters)
     expect(encrypted).not.toContain('+');
     expect(encrypted).not.toContain('/');
     expect(encrypted).not.toContain('=');

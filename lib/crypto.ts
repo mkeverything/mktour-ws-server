@@ -8,8 +8,8 @@ const IV_LENGTH = 16;
 const KEY_LENGTH = 32;
 const ALGORITHM = 'aes-256-cbc';
 
-// Type-safe helper to convert Buffer to Uint8Array for crypto functions
-// Buffer extends Uint8Array at runtime, this just satisfies TypeScript
+// type-safe helper to convert Buffer to Uint8Array for crypto functions
+// Buffer extends Uint8Array at runtime, this just satisfies typescript
 const toUint8Array = (buffer: Buffer): Uint8Array<ArrayBuffer> => buffer as unknown as Uint8Array<ArrayBuffer>;
 
 function getSecretKey(): string {
